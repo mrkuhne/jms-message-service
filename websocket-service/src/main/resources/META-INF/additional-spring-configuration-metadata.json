@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "jms.free-topic-destination",
+    "type": "java.lang.String",
+    "description": "The destination of the free websocket topic"
+  },
+  {
+    "name": "jms.premium-topic-destination",
+    "type": "java.lang.String",
+    "description": "The destination of the premium websocket topic"
+  }
+]}

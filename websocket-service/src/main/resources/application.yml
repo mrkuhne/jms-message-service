@@ -1,0 +1,33 @@
+server:
+    port: 8090
+
+spring:
+    application:
+        name: websocket-service
+    devtools:
+        restart:
+            enabled: false
+    activemq:
+        broker-url: tcp://localhost:61616
+        user: artemis
+        password: artemis
+        
+logging:
+    level:
+        root: INFO
+        org.springframework.web: DEBUG
+    file:
+        name: websocket-service/logs/application.log
+    pattern:
+        console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%thread]){yellow} %clr(%-5level) %clr(%logger{36}){cyan} - %msg%n%clr(%n){faint}"
+        file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    logback:
+        rollingpolicy:
+          max-file-size: 10MB
+          total-size-cap: 1GB
+          max-history: 30
+
+jms:
+    free-topic-destination: ${FREE_USER_TOPIC_DESTINATION:free-user-topic}
+    premium-topic-destination: ${PREMIUM_USER_TOPIC_DESTINATION:premium-user-topic}
+
