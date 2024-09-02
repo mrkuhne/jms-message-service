@@ -28,6 +28,7 @@ logging:
           max-history: 30
 
 jms:
-    free-topic-destination: ${FREE_USER_TOPIC_DESTINATION:free-user-topic}
-    premium-topic-destination: ${PREMIUM_USER_TOPIC_DESTINATION:premium-user-topic}
+    topic:
+        price-info-free: ${PRICE_INFO_TOPIC_FREE:price.info.free}
+        price-info-premium: ${PRICE_INFO_TOPIC_PREMIUM:price.info.premium}
 

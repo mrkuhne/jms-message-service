@@ -11,7 +11,7 @@ import org.springframework.jms.config.MethodJmsListenerEndpoint;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 
 import com.mrkuhne.websocket_service.jms.Constant;
-import com.mrkuhne.websocket_service.jms.JmsMessageListener;
+import com.mrkuhne.websocket_service.jms.service.JmsMessageListenerService;
 import com.mrkuhne.websocket_service.model.SimpleMessage;
 
 import jakarta.validation.constraints.NotNull;
@@ -32,21 +32,21 @@ public class JmsListenerConfig implements JmsListenerConfigurer{
     private final DefaultMessageHandlerMethodFactory jmsMessageHandlerConfig;
 
     private final JmsTopicConfig jmsTopicConfig;
-    private final JmsMessageListener jmsMessageListener;
+    private final JmsMessageListenerService jmsMessageListener;
 
     @Override
     public void configureJmsListeners(JmsListenerEndpointRegistrar registrar) {
         try {
-            Method freeUserMethod = JmsMessageListener.class.getMethod("freeMessageListener", SimpleMessage.class);
-            Method premiumUserMethod = JmsMessageListener.class.getMethod("premiumMessageListener", SimpleMessage.class);
+            Method priceInfoListenerMethodFree = JmsMessageListenerService.class.getMethod("priceInfoListenerFree", SimpleMessage.class);
+            Method priceInfoListenerMethodPremium = JmsMessageListenerService.class.getMethod("priceInfoListenerPremium", SimpleMessage.class);
 
-            MethodJmsListenerEndpoint freeListenerEndpoint = getMethodJmsListenerEndpoint(
-                Constant.FREE_TOPIC_LISTENER_ID, jmsTopicConfig.getFREE_USER_TOPIC_DESTINATION(), freeUserMethod, Constant.FREE_TOPIC_SUB_ID);
-            MethodJmsListenerEndpoint premiumListenerEndpoint = getMethodJmsListenerEndpoint(
-                Constant.PREMIUM_TOPIC_LISTENER_ID, jmsTopicConfig.getPREMIUM_USER_TOPIC_DESTINATION(), premiumUserMethod, Constant.PREMIUM_TOPIC_SUB_ID);
+            MethodJmsListenerEndpoint priceInfoEndpointFree = getMethodJmsListenerEndpoint(
+                Constant.PRICE_INFO_LISTENER_ID_FREE, jmsTopicConfig.getPRICE_INFO_TOPIC_FREE(), priceInfoListenerMethodFree, Constant.PRICE_INFO_SUB_ID_FREE);
+            MethodJmsListenerEndpoint priceInfoEndpointPremium = getMethodJmsListenerEndpoint(
+                Constant.PRICE_INFO_LISTENER_ID_PREMIUM, jmsTopicConfig.getPRICE_INFO_TOPIC_PREMIUM(), priceInfoListenerMethodPremium, Constant.PRICE_INFO_SUB_ID_PREMIUM);
             
-            registrar.registerEndpoint(freeListenerEndpoint, freeListenerFactory);
-            registrar.registerEndpoint(premiumListenerEndpoint, premiumListenerFactory);
+            registrar.registerEndpoint(priceInfoEndpointFree, freeListenerFactory);
+            registrar.registerEndpoint(priceInfoEndpointPremium, premiumListenerFactory);
         } catch (NoSuchMethodException e) {
             throw new UnsupportedOperationException("Unimplemented method 'configureJmsListeners'");
         }

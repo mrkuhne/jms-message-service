@@ -24,9 +24,9 @@ public class MessageSenderService {
 
     @Scheduled(fixedRate = 5000)
     private void messageEmitter() {
-        jmsTemplate.convertAndSend(jmsTopicConfig.getFREE_USER_TOPIC_DESTINATION(),
+        jmsTemplate.convertAndSend(jmsTopicConfig.getPRICE_INFO_TOPIC_FREE(),
             messageCreator("Message", "Free", randomBigDecimal()));
-        jmsTemplate.convertAndSend(jmsTopicConfig.getPREMIUM_USER_TOPIC_DESTINATION(),
+        jmsTemplate.convertAndSend(jmsTopicConfig.getPRICE_INFO_TOPIC_PREMIUM(),
             messageCreator("Message", "Premium", randomBigDecimal()));
         log.info("Messages have been sent to free and premium topics");
     }

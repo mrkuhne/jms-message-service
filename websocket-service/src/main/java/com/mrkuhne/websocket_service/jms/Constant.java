@@ -2,10 +2,10 @@ package com.mrkuhne.websocket_service.jms;
 
 public class Constant {
     
-    public static final String FREE_TOPIC_LISTENER_ID = "freeTopicId";
-    public static final String FREE_TOPIC_SUB_ID = "freeSub";
+    public static final String PRICE_INFO_LISTENER_ID_FREE = "priceInfoFree";
+    public static final String PRICE_INFO_SUB_ID_FREE = "priceInfoFree";
 
-    public static final String PREMIUM_TOPIC_LISTENER_ID = "premiumTopcId";
-    public static final String PREMIUM_TOPIC_SUB_ID = "premiumSub";
+    public static final String PRICE_INFO_LISTENER_ID_PREMIUM = "priceInfoPremium";
+    public static final String PRICE_INFO_SUB_ID_PREMIUM = "priceInfoPremium";
     
 }
