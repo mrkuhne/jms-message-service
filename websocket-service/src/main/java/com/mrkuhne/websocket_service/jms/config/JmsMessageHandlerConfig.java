@@ -10,7 +10,7 @@ public class JmsMessageHandlerConfig {
 
     @Bean
     public DefaultMessageHandlerMethodFactory messageHandlerMethodFactory() {
-        DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
+        var factory = new DefaultMessageHandlerMethodFactory();
         factory.setValidator(new LocalValidatorFactoryBean());
         return factory;
     }

@@ -40,31 +40,34 @@ public class JmsMainConfig {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        ActiveMQConnectionFactory connection = new ActiveMQConnectionFactory();
-        connection.setBrokerURL(brokerUrl);
-        connection.setUserName(username);
-        connection.setPassword(password);
-        return connection;
+        return new ActiveMQConnectionFactory(username, password, brokerUrl);
     }
 
     @Bean
-    @Qualifier("freeListenerFactory")
-    public DefaultJmsListenerContainerFactory freeListenerFactory(ConnectionFactory connectionFactory) {
-        log.info("Listener containter factory for {} has been created", FREE_TOPIC_ID);
-        return getJmsListenerContainerFactory(connectionFactory, FREE_TOPIC_ID);
+    public MessageConverter messageConverter() {
+        var converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT);
+        converter.setTypeIdPropertyName("_type");
+        converter.setObjectMapper(objectMapper());
+        return converter;
     }
 
     @Bean
-    @Qualifier("premiumListenerFactory")
-    public DefaultJmsListenerContainerFactory premiumListenerFactory(ConnectionFactory connectionFactory) {
-        log.info("Listener containter factory for {} has been created", PREMIUM_TOPIC_ID);
-        return getJmsListenerContainerFactory(connectionFactory, PREMIUM_TOPIC_ID);
+    public DefaultJmsListenerContainerFactory freeListenerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        log.info("Listener container factory for {} has been created", FREE_TOPIC_ID);
+        return getJmsListenerContainerFactory(connectionFactory, messageConverter, FREE_TOPIC_ID);
     }
 
-    private DefaultJmsListenerContainerFactory getJmsListenerContainerFactory(ConnectionFactory connectionFactory, String topicId) {
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+    @Bean
+    public DefaultJmsListenerContainerFactory premiumListenerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        log.info("Listener container factory for {} has been created", PREMIUM_TOPIC_ID);
+        return getJmsListenerContainerFactory(connectionFactory, messageConverter, PREMIUM_TOPIC_ID);
+    }
+
+    private DefaultJmsListenerContainerFactory getJmsListenerContainerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter, String topicId) {
+        var factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(jacksonMessageConverter(objectMapper()));
+        factory.setMessageConverter(messageConverter);
         factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
         factory.setPubSubDomain(true);
         factory.setSubscriptionDurable(true);
@@ -73,21 +76,12 @@ public class JmsMainConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ObjectMapper objectMapp) {
-        JmsTemplate jmsTemplate = new JmsTemplate();
-        jmsTemplate.setConnectionFactory(connectionFactory());
-        jmsTemplate.setMessageConverter(jacksonMessageConverter(objectMapper()));
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        var jmsTemplate = new JmsTemplate();
+        jmsTemplate.setConnectionFactory(connectionFactory);
+        jmsTemplate.setMessageConverter(messageConverter);
         jmsTemplate.setPubSubDomain(true);
         return jmsTemplate;
-    }
-
-    @Bean
-    public MessageConverter jacksonMessageConverter(ObjectMapper objectMapper) {
-        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setTargetType(MessageType.TEXT);
-        converter.setTypeIdPropertyName("_type");
-        converter.setObjectMapper(objectMapper);
-        return converter;
     }
 
     private ObjectMapper objectMapper(){

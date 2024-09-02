@@ -10,8 +10,8 @@ import lombok.Getter;
 public class JmsTopicConfig {
 
     @Value("${jms.topic.price-info-free}")
-    public String PRICE_INFO_TOPIC_FREE;
+    public String priceInfoTopicDestinationFree;
     @Value("${jms.topic.price-info-premium}")
-    public String PRICE_INFO_TOPIC_PREMIUM;
+    public String princeInfoTopicDestinationPremium;
     
 }
