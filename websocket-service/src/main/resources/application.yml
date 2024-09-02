@@ -17,7 +17,7 @@ logging:
         root: INFO
         org.springframework.web: DEBUG
     file:
-        name: websocket-service/logs/application.log
+        name: logs/application.log
     pattern:
         console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%thread]){yellow} %clr(%-5level) %clr(%logger{36}){cyan} - %msg%n%clr(%n){faint}"
         file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
